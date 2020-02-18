@@ -4,16 +4,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.thethirdapplication.models.Articles;
+import com.example.thethirdapplication.models.MainResponse;
 
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerHolder> {
-    List<PhotoModel> models;
+    List<Articles> models;
 
-    public RecyclerViewAdapter(List<PhotoModel> models) {
+    public RecyclerViewAdapter(List<Articles> models) {
         this.models = models;
     }
 
@@ -26,8 +27,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
-        holder.textView.setText(models.get(position).tvtitle);
-
+        holder.authorTextView.setText(models.get(position).getAuthor());
+        holder.titleTextView.setText("||" + models.get(position).getTitle());
+        holder.publishTextView.setText("*" + models.get(position).getPublishedAt());
     }
 
     @Override
@@ -36,11 +38,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class RecyclerHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView authorTextView;
+        TextView titleTextView;
+        TextView publishTextView;
 
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.title);
+            authorTextView = itemView.findViewById(R.id.author);
+            titleTextView = itemView.findViewById(R.id.title);
+            publishTextView = itemView.findViewById(R.id.publishedAt);
 
         }
     }
