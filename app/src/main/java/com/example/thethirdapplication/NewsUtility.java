@@ -10,7 +10,6 @@ public class NewsUtility {
 
     private static Calendar c;
     private static String currentDate;
-    public static String apiKey = "4d02332f1b864beda94d60580952d46a";
 
     public static String getSpecificDate() {
         c = new GregorianCalendar();

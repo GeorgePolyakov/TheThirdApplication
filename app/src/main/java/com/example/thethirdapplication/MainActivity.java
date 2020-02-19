@@ -24,6 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, RecyclerViewAdapter.OnRecycleViewNewsListener {
+
     private RecyclerView rvMain;
     private Call<MainResponse> listCall;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             initViewSwipeToRefresh();
             fillAdapter();
             spinnerTheme.setOnItemSelectedListener(this);
-
             onRefresh();
         } catch (Exception e) {
             showError();
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
                 Log.i("myTag", response.raw() + "");
                 parseData(response.body().getArticles());
-
             }
 
             @Override
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void fillAdapter() {
         spinnerTheme = findViewById(R.id.spinnerTheme);
-
         themesNewsList = new ArrayList<String>();
         themesNewsList.add("Bitcoin");
         themesNewsList.add("Business of USA");
@@ -120,19 +118,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, themesNewsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerTheme.setAdapter(adapter);
     }
 
     private void showData() {
         mErrorView.setVisibility(View.GONE);
         rvMain.setVisibility(View.VISIBLE);
+        spinnerTheme.setVisibility(View.VISIBLE);
 
     }
 
     private void showError() {
         rvMain.setVisibility(View.GONE);
         mErrorView.setVisibility(View.VISIBLE);
+        spinnerTheme.setVisibility(View.GONE);
+
     }
 
     @Override

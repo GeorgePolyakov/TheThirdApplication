@@ -69,7 +69,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onClick(View v) {
             Log.i("myTag", "xyi"+ authorTextView.getText() + "");
             onRecycleViewNewsListener.onNewsRecycleClick(keyPosition);
-
         }
     }
 
