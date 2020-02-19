@@ -6,21 +6,27 @@ public class Articles {
     private String author;
     private String title;
     private String publishedAt;
+    private String description;
+    private String urlToImage;
 
-    public String getTitle() {
-        return title;
+
+
+    public void setUrlToImage(String urlToImage) {
+        this.urlToImage = urlToImage;
     }
 
-    public String getPublishedAt() {
-        return publishedAt;
+
+
+    public String getDescription() {
+        return description;
     }
+
+    public void setDescription(String description) {this.description = description; }
+
+    public void setPublishedAt(String publishedAt) {this.publishedAt = publishedAt;}
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
     }
 
     public void setSource(Source source) {
@@ -31,12 +37,22 @@ public class Articles {
         this.author = author;
     }
 
+    public String getUrlToImage() { return urlToImage; }
+
     public Source getSource() {
         return source;
     }
 
     public String getAuthor() {
         return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPublishedAt() {
+        return publishedAt;
     }
 
 }

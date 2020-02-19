@@ -2,4 +2,6 @@
 <resources>
     <dimen name="textViewSize">16sp</dimen>
     <dimen name="textViewErrorSize">24sp</dimen>
+    <dimen name="textViewSecondActivity">16sp</dimen>
+    <dimen name="marginTopRecycle">5dp</dimen>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.thethirdapplication;
+package com.example.thethirdapplication.retrofit;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,40 +1,43 @@
 package com.example.thethirdapplication;
 
+import com.example.thethirdapplication.models.*;
+import com.example.thethirdapplication.retrofit.*;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.thethirdapplication.models.*;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, RecyclerViewAdapter.OnRecycleViewNewsListener {
     private RecyclerView rvMain;
-    private Calendar c;
-    private String currentDate;
     private Call<MainResponse> listCall;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RetrofitInterface retrofitInterface;
     private View mErrorView;
+    private List listThemeAdapter;
+    private Spinner spinnerTheme;
+    private List<String> themesNewsList;
+    private String bitcoin = "Bitcoin";
+    private String businnesOfUs = "Business of USA";
+    private String apple = "Apple";
+    private String TechCrunch = "TechCrunch";
+    private String wallStreetJournal = "Wall Street Journal";
+    int keyTheme = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +46,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             setContentView(R.layout.activity_main);
             mErrorView = findViewById(R.id.error_view);
             initRecycleView();
-            getSpecificDate();
+            NewsUtility.getSpecificDate();
             initViewSwipeToRefresh();
-            retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
+            fillAdapter();
+            spinnerTheme.setOnItemSelectedListener(this);
+
             onRefresh();
         } catch (Exception e) {
             showError();
         }
-
-        Log.i("myTag", retrofitInterface.getAllPhotos(currentDate).toString());
     }
 
     private void parseData(List<Articles> body) {
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(body);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(body, this);
         rvMain.setAdapter(recyclerViewAdapter);
-    }
-
-    private void getSpecificDate() {
-        c = new GregorianCalendar();
-        c.add(Calendar.MONTH, -1);
-        Date date = c.getTime();
-        DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-        currentDate = df.format(date);
     }
 
     private void initViewSwipeToRefresh() {
@@ -81,11 +76,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         showData();
-        listCall = retrofitInterface.getAllPhotos(currentDate);
+        retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
+        if (keyTheme == 0) {
+            listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate());
+        } else if (keyTheme == 1) {
+            listCall = retrofitInterface.businessOfUsa();
+        } else if (keyTheme == 2) {
+            listCall = retrofitInterface.getAllAppleNews();
+        } else if (keyTheme == 3) {
+            listCall = retrofitInterface.techCrunch();
+        } else if (keyTheme == 4) {
+            listCall = retrofitInterface.wallStreetJournal();
+        }
         listCall.enqueue(new Callback<MainResponse>() {
             @Override
             public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
+                Log.i("myTag", response.raw() + "");
                 parseData(response.body().getArticles());
+
             }
 
             @Override
@@ -100,7 +108,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
-    private void showData(){
+    public void fillAdapter() {
+        spinnerTheme = findViewById(R.id.spinnerTheme);
+
+        themesNewsList = new ArrayList<String>();
+        themesNewsList.add("Bitcoin");
+        themesNewsList.add("Business of USA");
+        themesNewsList.add("Apple");
+        themesNewsList.add("TechCrunch");
+        themesNewsList.add("Wall Street Journal");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, themesNewsList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerTheme.setAdapter(adapter);
+    }
+
+    private void showData() {
         mErrorView.setVisibility(View.GONE);
         rvMain.setVisibility(View.VISIBLE);
 
@@ -111,4 +135,36 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mErrorView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onNewsRecycleClick(int key) {
+        Intent intent = new Intent(this, NewsActivity.class);
+        intent.putExtra("key", key);
+        intent.putExtra("keyTheme", keyTheme);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (spinnerTheme.getSelectedItem().toString().equals(businnesOfUs)) {
+            keyTheme = 1;
+            onRefresh();
+        } else if (spinnerTheme.getSelectedItem().toString().equals(bitcoin)) {
+            keyTheme = 0;
+            onRefresh();
+        } else if (spinnerTheme.getSelectedItem().toString().equals(apple)) {
+            keyTheme = 2;
+            onRefresh();
+        } else if (spinnerTheme.getSelectedItem().toString().equals(TechCrunch)) {
+            keyTheme = 3;
+            onRefresh();
+        } else if (spinnerTheme.getSelectedItem().toString().equals(wallStreetJournal)) {
+            keyTheme = 4;
+            onRefresh();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //Nothing TODO
+    }
 }
