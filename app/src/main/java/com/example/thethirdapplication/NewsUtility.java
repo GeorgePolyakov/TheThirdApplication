@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 
 public class NewsUtility {
 
+    public static String apiKey = "4d02332f1b864beda94d60580952d46a";
     private static Calendar c;
     private static String currentDate;
 

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String apple = "Apple";
     private String TechCrunch = "TechCrunch";
     private String wallStreetJournal = "Wall Street Journal";
-    int keyTheme = 0;
+    private int keyTheme = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,17 +77,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onRefresh() {
         showData();
         retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
-        if (keyTheme == 0) {
-            listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate());
-        } else if (keyTheme == 1) {
-            listCall = retrofitInterface.businessOfUsa();
-        } else if (keyTheme == 2) {
-            listCall = retrofitInterface.getAllAppleNews();
-        } else if (keyTheme == 3) {
-            listCall = retrofitInterface.techCrunch();
-        } else if (keyTheme == 4) {
-            listCall = retrofitInterface.wallStreetJournal();
+        switch(keyTheme){
+            case 0:  listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate(),NewsUtility.apiKey);
+                break;
+            case 1:  listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
+                break;
+            case 2:  listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
+                break;
+            case 3:  listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+                break;
+            case 4:  listCall = retrofitInterface.wallStreetJournal(NewsUtility.apiKey);
+                break;
         }
+
         listCall.enqueue(new Callback<MainResponse>() {
             @Override
             public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
@@ -145,11 +147,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (spinnerTheme.getSelectedItem().toString().equals(businnesOfUs)) {
-            keyTheme = 1;
-            onRefresh();
-        } else if (spinnerTheme.getSelectedItem().toString().equals(bitcoin)) {
+
+        if (spinnerTheme.getSelectedItem().toString().equals(bitcoin)) {
             keyTheme = 0;
+            onRefresh();
+        } else if (spinnerTheme.getSelectedItem().toString().equals(businnesOfUs)) {
+            keyTheme = 1;
             onRefresh();
         } else if (spinnerTheme.getSelectedItem().toString().equals(apple)) {
             keyTheme = 2;

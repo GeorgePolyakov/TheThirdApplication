@@ -13,8 +13,6 @@ import com.example.thethirdapplication.models.MainResponse;
 import com.example.thethirdapplication.retrofit.RetrofitInstance;
 import com.example.thethirdapplication.retrofit.RetrofitInterface;
 
-import java.util.Calendar;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,8 +25,6 @@ public class NewsActivity extends AppCompatActivity {
     private int keyTheme;
     private RetrofitInterface retrofitInterface;
     private Call<MainResponse> listCall;
-    private Calendar c;
-    private String currentDate;
     private Context context = this;
     private TextView titleTextView;
     private TextView sourceTextView;
@@ -49,16 +45,17 @@ public class NewsActivity extends AppCompatActivity {
         keyTheme = getIntent().getIntExtra("keyTheme", 0);
 
         retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
-        if (keyTheme == 0) {
-            listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate());
-        } else if (keyTheme == 1) {
-            listCall = retrofitInterface.businessOfUsa();
-        } else if (keyTheme == 2) {
-            listCall = retrofitInterface.getAllAppleNews();
-        } else if (keyTheme == 3) {
-            listCall = retrofitInterface.techCrunch();
-        } else if (keyTheme == 4) {
-            listCall = retrofitInterface.wallStreetJournal();
+        switch(keyTheme){
+            case 0:  listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate(),NewsUtility.apiKey);
+            break;
+            case 1:  listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
+            break;
+            case 2:  listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
+            break;
+            case 3:  listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+            break;
+            case 4:  listCall = retrofitInterface.wallStreetJournal(NewsUtility.apiKey);
+            break;
         }
 
         listCall.enqueue(new Callback<MainResponse>() {
