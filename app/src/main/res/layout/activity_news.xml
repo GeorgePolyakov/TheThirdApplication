@@ -68,15 +68,4 @@
         app:layout_constraintTop_toBottomOf="@+id/glideImageView"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <ScrollView
-        android:layout_width="49dp"
-        android:layout_height="665dp"
-        tools:layout_editor_absoluteX="374dp"
-        tools:layout_editor_absoluteY="64dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
