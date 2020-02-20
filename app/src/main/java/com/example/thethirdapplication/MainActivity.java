@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         showData();
         retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
         switch(keyTheme){
-            case 0:  listCall = retrofitInterface.getAllPhotos(NewsUtility.getSpecificDate(),NewsUtility.apiKey);
+            case 0:  listCall = retrofitInterface.getAllBitcoinNews(NewsUtility.getSpecificDate(),NewsUtility.apiKey);
                 break;
             case 1:  listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
                 break;
@@ -127,14 +127,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mErrorView.setVisibility(View.GONE);
         rvMain.setVisibility(View.VISIBLE);
         spinnerTheme.setVisibility(View.VISIBLE);
-
     }
 
     private void showError() {
         rvMain.setVisibility(View.GONE);
         mErrorView.setVisibility(View.VISIBLE);
         spinnerTheme.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -150,20 +148,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (spinnerTheme.getSelectedItem().toString().equals(bitcoin)) {
             keyTheme = 0;
-            onRefresh();
         } else if (spinnerTheme.getSelectedItem().toString().equals(businnesOfUs)) {
             keyTheme = 1;
-            onRefresh();
         } else if (spinnerTheme.getSelectedItem().toString().equals(apple)) {
             keyTheme = 2;
-            onRefresh();
         } else if (spinnerTheme.getSelectedItem().toString().equals(TechCrunch)) {
             keyTheme = 3;
-            onRefresh();
         } else if (spinnerTheme.getSelectedItem().toString().equals(wallStreetJournal)) {
             keyTheme = 4;
-            onRefresh();
         }
+        onRefresh();
     }
 
     @Override

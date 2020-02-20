@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 public interface RetrofitInterface {
 
   @GET("/v2/everything?q=bitcoin&from=currentDate&sortBy=publishedAt")
-  Call<MainResponse> getAllPhotos(@Query("currentDate") String currentDate,@Query("apiKey")String apiKey);
+  Call<MainResponse> getAllBitcoinNews(@Query("currentDate") String currentDate,@Query("apiKey")String apiKey);
 
   @GET("/v2/top-headlines?country=us&category=business")
   Call<MainResponse> businessOfUsa (@Query("apiKey")String apiKey);
