@@ -5,15 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.thethirdapplication.models.Articles;
 
 import java.util.List;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.RecyclerHolder> {
 
-    private  List<Articles> models;
+    private List<Articles> models;
     private OnRecycleViewNewsListener onRecycleViewNewsListener;
     private int keyPosition;
 
@@ -22,12 +24,11 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         this.models = models;
     }
 
-    public void updateList(List<Articles> models){
+    public void updateList(List<Articles> models) {
         if (this.models != null) {
             this.models.clear();
             this.models.addAll(models);
-        }
-        else {
+        } else {
             this.models = models;
         }
         notifyDataSetChanged();
@@ -36,9 +37,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     @NonNull
     @Override
     public NewsRecyclerViewAdapter.RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row,null,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row, null, false);
         NewsRecyclerViewAdapter.RecyclerHolder viewHolder = new NewsRecyclerViewAdapter.RecyclerHolder(view, onRecycleViewNewsListener);
-        return  viewHolder;
+        return viewHolder;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             authorTextView = itemView.findViewById(R.id.author);
             titleTextView = itemView.findViewById(R.id.title);
             publishTextView = itemView.findViewById(R.id.publishedAt);
-            this.onRecycleViewNewsListener= onRecycleViewNewsListener;
+            this.onRecycleViewNewsListener = onRecycleViewNewsListener;
             itemView.setOnClickListener(this);
         }
 

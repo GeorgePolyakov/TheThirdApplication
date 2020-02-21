@@ -7,16 +7,16 @@
     android:orientation="vertical">
 
     <ImageView
-        android:src="@drawable/ic_error"
         android:layout_width="60dp"
-        android:layout_height="60dp"></ImageView>
+        android:layout_height="60dp"
+        android:src="@drawable/ic_error"></ImageView>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/error_text"
-        android:textStyle="bold"
         android:textSize="@dimen/textViewErrorSize"
-        ></TextView>
+        android:textStyle="bold"></TextView>
 
 </LinearLayout>
