@@ -9,14 +9,14 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_error"></ImageView>
+        android:src="@drawable/ic_error" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margintoperror"
         android:text="@string/error_text"
         android:textSize="@dimen/textViewErrorSize"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold" />
 
 </LinearLayout>

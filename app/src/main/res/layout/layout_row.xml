@@ -8,27 +8,27 @@
         android:id="@+id/images"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/сolor_dark"></ImageView>
+        android:textColor="@color/сolor_dark" />
 
     <TextView
         android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/сolor_dark"
-        android:textSize="@dimen/textViewSize"></TextView>
+        android:textSize="@dimen/textViewSize" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/сolor_dark"
-        android:textSize="@dimen/textViewSize"></TextView>
+        android:textSize="@dimen/textViewSize" />
 
     <TextView
         android:id="@+id/publishedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/сolor_dark"
-        android:textSize="@dimen/textViewSize"></TextView>
+        android:textSize="@dimen/textViewSize" />
 
 </LinearLayout>

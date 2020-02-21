@@ -8,4 +8,5 @@
     <dimen name="zerosize">0dp</dimen>
     <dimen name="glidemarginBottom">235dp</dimen>
     <dimen name="glidemargintop">12dp</dimen>
+    <dimen name="margintoperror">8dp</dimen>
 </resources>
