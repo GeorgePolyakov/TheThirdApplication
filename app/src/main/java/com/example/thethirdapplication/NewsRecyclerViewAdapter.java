@@ -4,37 +4,45 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.thethirdapplication.models.Articles;
-import com.example.thethirdapplication.models.MainResponse;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerHolder> {
+public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.RecyclerHolder> {
 
-    List<Articles> models;
-    OnRecycleViewNewsListener onRecycleViewNewsListener;
+    private  List<Articles> models;
+    private OnRecycleViewNewsListener onRecycleViewNewsListener;
     private int keyPosition;
 
-    public RecyclerViewAdapter(List<Articles> models, OnRecycleViewNewsListener onRecycleViewNewsListener) {
+    public NewsRecyclerViewAdapter(List<Articles> models, OnRecycleViewNewsListener onRecycleViewNewsListener) {
         this.onRecycleViewNewsListener = onRecycleViewNewsListener;
         this.models = models;
     }
 
+    public void updateList(List<Articles> models){
+        if (this.models != null) {
+            this.models.clear();
+            this.models.addAll(models);
+        }
+        else {
+            this.models = models;
+        }
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public RecyclerViewAdapter.RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewsRecyclerViewAdapter.RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row,null,false);
-        RecyclerViewAdapter.RecyclerHolder viewHolder = new RecyclerViewAdapter.RecyclerHolder(view, onRecycleViewNewsListener);
+        NewsRecyclerViewAdapter.RecyclerHolder viewHolder = new NewsRecyclerViewAdapter.RecyclerHolder(view, onRecycleViewNewsListener);
         return  viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.RecyclerHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull NewsRecyclerViewAdapter.RecyclerHolder holder, int position) {
         holder.bind(position);
     }
 
@@ -44,10 +52,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class RecyclerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView authorTextView;
-        TextView titleTextView;
-        TextView publishTextView;
-        OnRecycleViewNewsListener onRecycleViewNewsListener;
+        private TextView authorTextView;
+        private TextView titleTextView;
+        private TextView publishTextView;
+        private OnRecycleViewNewsListener onRecycleViewNewsListener;
 
         public RecyclerHolder(@NonNull View itemView, OnRecycleViewNewsListener onRecycleViewNewsListener) {
             super(itemView);
@@ -67,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View v) {
-            Log.i("myTag", "xyi"+ authorTextView.getText() + "");
+            Log.i("myTag", authorTextView.getText() + "");
             onRecycleViewNewsListener.onNewsRecycleClick(keyPosition);
         }
     }

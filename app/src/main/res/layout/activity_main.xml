@@ -16,14 +16,17 @@
             android:id="@+id/spinnerTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textViewSecondActivity"/>
+            android:textSize="@dimen/textViewSecondActivity"
+            android:text="Software"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/marginTopRecycle"
-            app:layout_constraintVertical_bias="1" />
+            app:layout_constraintVertical_bias="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
 
         <include
             layout="@layout/error_view"

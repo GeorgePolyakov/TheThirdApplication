@@ -26,7 +26,6 @@ public class NewsActivity extends AppCompatActivity {
     private int keyTheme;
     private RetrofitInterface retrofitInterface;
     private Call<MainResponse> listCall;
-    private Context context = this;
     private TextView titleTextView;
     private TextView sourceTextView;
     private TextView descriptionTextView;
@@ -56,19 +55,25 @@ public class NewsActivity extends AppCompatActivity {
     public void setListCall(int keyTheme) {
         switch (keyTheme) {
             case 0:
-                listCall = retrofitInterface.getAllBitcoinNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
+                listCall = retrofitInterface.getAllSoftwareNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
             case 1:
-                listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
+                listCall = retrofitInterface.getAllBitcoinNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
             case 2:
-                listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
+                listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
                 break;
             case 3:
-                listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+                listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
                 break;
             case 4:
+                listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+                break;
+            case 5:
                 listCall = retrofitInterface.wallStreetJournal(NewsUtility.apiKey);
+                break;
+            default:
+                listCall = retrofitInterface.getAllSoftwareNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
         }
     }
@@ -82,16 +87,8 @@ public class NewsActivity extends AppCompatActivity {
                 titleTextView.setText(response.body().getArticles().get(position).getTitle() + "");
                 sourceTextView.setText(response.body().getArticles().get(position).getSource().getName() + "");
                 descriptionTextView.setText(response.body().getArticles().get(position).getDescription() + "");
-                Glide.with(context)
-                        .load(response.body().getArticles().get(position).getUrlToImage())
-                        .fitCenter()
-                        .placeholder(R.drawable.ic_launcher_foreground)
-                        .into(glideImageView);
-
-                Picasso.with(context)
-                        .load(response.body().getArticles().get(position).getUrlToImage())
-                        .placeholder(R.drawable.ic_launcher_foreground)
-                        .into(picassoImageView);
+                callGlide(response);
+                callPicasso(response);
             }
 
             @Override
@@ -100,5 +97,20 @@ public class NewsActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    public void callGlide(Response<MainResponse> response) {
+        Glide.with(glideImageView.getContext())
+                .load(response.body().getArticles().get(position).getUrlToImage())
+                .fitCenter()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(glideImageView);
+    }
+
+    public void callPicasso(Response<MainResponse> response) {
+        Picasso.with(picassoImageView.getContext())
+                .load(response.body().getArticles().get(position).getUrlToImage())
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(picassoImageView);
     }
 }

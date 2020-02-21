@@ -4,7 +4,6 @@ import com.example.thethirdapplication.models.*;
 import com.example.thethirdapplication.retrofit.*;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -19,26 +18,28 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, RecyclerViewAdapter.OnRecycleViewNewsListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, NewsRecyclerViewAdapter.OnRecycleViewNewsListener {
 
+    private NewsRecyclerViewAdapter newsRecyclerViewAdapter;
     private RecyclerView rvMain;
     private Call<MainResponse> listCall;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RetrofitInterface retrofitInterface;
     private View mErrorView;
-    private List listThemeAdapter;
     private Spinner spinnerTheme;
     private List<String> themesNewsList;
-    private String bitcoin = "Bitcoin";
-    private String businnesOfUs = "Business of USA";
-    private String apple = "Apple";
-    private String TechCrunch = "TechCrunch";
-    private String wallStreetJournal = "Wall Street Journal";
     private int keyTheme = 0;
+    private boolean recycleFlag = false;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,47 +47,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             mErrorView = findViewById(R.id.error_view);
-            initRecycleView();
-            NewsUtility.getSpecificDate();
             initViewSwipeToRefresh();
-            fillAdapter();
+            fillSpinnerAdapter();
             spinnerTheme.setOnItemSelectedListener(this);
             onRefresh();
         } catch (Exception e) {
-            showError();
+            showHideError(false);
         }
     }
 
     private void parseData(List<Articles> body) {
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(body, this);
-        rvMain.setAdapter(recyclerViewAdapter);
+        if (!recycleFlag) {
+            newsRecyclerViewAdapter = new NewsRecyclerViewAdapter(body, this);
+            rvMain.setAdapter(newsRecyclerViewAdapter);
+            recycleFlag = true;
+        } else {
+            newsRecyclerViewAdapter.updateList(body);
+        }
     }
 
     private void initViewSwipeToRefresh() {
+        rvMain = findViewById(R.id.rvMain);
         mSwipeRefreshLayout = findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    public void initRecycleView() {
-        rvMain = findViewById(R.id.rvMain);
-        rvMain.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-    }
-
     @Override
     public void onRefresh() {
-        showData();
+        showHideError(true);
         retrofitInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitInterface.class);
-        switch(keyTheme){
-            case 0:  listCall = retrofitInterface.getAllBitcoinNews(NewsUtility.getSpecificDate(),NewsUtility.apiKey);
+        switch (keyTheme) {
+            case 0:
+                listCall = retrofitInterface.getAllSoftwareNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
-            case 1:  listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
+            case 1:
+                listCall = retrofitInterface.getAllBitcoinNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
-            case 2:  listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
+            case 2:
+                listCall = retrofitInterface.businessOfUsa(NewsUtility.apiKey);
                 break;
-            case 3:  listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+            case 3:
+                listCall = retrofitInterface.getAllAppleNews(NewsUtility.apiKey);
                 break;
-            case 4:  listCall = retrofitInterface.wallStreetJournal(NewsUtility.apiKey);
+            case 4:
+                listCall = retrofitInterface.techCrunch(NewsUtility.apiKey);
+                break;
+            case 5:
+                listCall = retrofitInterface.wallStreetJournal(NewsUtility.apiKey);
+                break;
+            default:
+                listCall = retrofitInterface.getAllSoftwareNews(NewsUtility.getSpecificDate(), NewsUtility.apiKey);
                 break;
         }
 
@@ -100,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onFailure(Call<MainResponse> call, Throwable t) {
                 Log.i("myTag", t + "");
-                showError();
+                showHideError(false);
             }
 
         });
@@ -109,9 +120,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void fillAdapter() {
+    public void fillSpinnerAdapter() {
         spinnerTheme = findViewById(R.id.spinnerTheme);
         themesNewsList = new ArrayList<String>();
+        themesNewsList.add("Software");
         themesNewsList.add("Bitcoin");
         themesNewsList.add("Business of USA");
         themesNewsList.add("Apple");
@@ -123,16 +135,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinnerTheme.setAdapter(adapter);
     }
 
-    private void showData() {
-        mErrorView.setVisibility(View.GONE);
-        rvMain.setVisibility(View.VISIBLE);
-        spinnerTheme.setVisibility(View.VISIBLE);
-    }
-
-    private void showError() {
-        rvMain.setVisibility(View.GONE);
-        mErrorView.setVisibility(View.VISIBLE);
-        spinnerTheme.setVisibility(View.GONE);
+    private void showHideError(boolean state) {
+        if (state) {
+            mErrorView.setVisibility(View.GONE);
+            rvMain.setVisibility(View.VISIBLE);
+            spinnerTheme.setVisibility(View.VISIBLE);
+        } else {
+            rvMain.setVisibility(View.GONE);
+            mErrorView.setVisibility(View.VISIBLE);
+            spinnerTheme.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -145,18 +157,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        if (spinnerTheme.getSelectedItem().toString().equals(bitcoin)) {
-            keyTheme = 0;
-        } else if (spinnerTheme.getSelectedItem().toString().equals(businnesOfUs)) {
-            keyTheme = 1;
-        } else if (spinnerTheme.getSelectedItem().toString().equals(apple)) {
-            keyTheme = 2;
-        } else if (spinnerTheme.getSelectedItem().toString().equals(TechCrunch)) {
-            keyTheme = 3;
-        } else if (spinnerTheme.getSelectedItem().toString().equals(wallStreetJournal)) {
-            keyTheme = 4;
-        }
+        keyTheme = position;
         onRefresh();
     }
 
