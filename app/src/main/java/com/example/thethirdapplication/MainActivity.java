@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             mErrorView = findViewById(R.id.error_view);
@@ -51,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             fillSpinnerAdapter();
             spinnerTheme.setOnItemSelectedListener(this);
             onRefresh();
-        } catch (Exception e) {
-            showHideError(false);
-        }
     }
 
     private void parseData(List<Articles> body) {
